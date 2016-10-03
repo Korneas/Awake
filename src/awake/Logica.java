@@ -15,7 +15,7 @@ public class Logica {
 	private PShape[] particle,elem;
 	private Awaking wake;
 	private ArrayList<Enemigo> enemies;
-	private ArrayList<Elemento> consumibles;
+	private ArrayList<Elemento> consumibles,recoger;
 	
 
 	public Logica(PApplet app) {
@@ -160,6 +160,19 @@ public class Logica {
 		for (int i = 0; i < enemies.size(); i++) {
 			enemies.get(i).pintar(posXf,posYf);
 			enemies.get(i).perseguir(wake.getX(), wake.getY());
+		}
+		
+		for (int i = 0; i < consumibles.size(); i++) {
+			consumibles.get(i).girar(posXf,posYf);
+			
+			float cX = consumibles.get(i).getX();
+			float cY = consumibles.get(i).getY();
+			if(PApplet.dist(wake.pos.x, wake.pos.y, cX, cY)<wake.getEsc()/2){
+				Elemento elem = consumibles.get(i);
+				wake.comer(elem);
+				recoger.add(elem);
+				consumibles.remove(elem);
+			}
 		}
 		app.popMatrix();
 		app.image(tools, app.width/2, app.height/2);

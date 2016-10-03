@@ -41,7 +41,7 @@ public class Awaking {
 				esc+=10;
 				break;
 			case 3:
-				
+				a+=0.2;
 				break;
 			case 4:
 				break;
@@ -73,6 +73,14 @@ public class Awaking {
 
 	public void setY(float y) {
 		this.y = y;
+	}
+
+	public float getEsc() {
+		return esc;
+	}
+
+	public void setEsc(float esc) {
+		this.esc = esc;
 	}
 	
 	
