@@ -3,13 +3,15 @@ package awake;
 import java.util.ArrayList;
 import processing.core.PApplet;
 import processing.core.PShape;
+import processing.core.PVector;
 
 public class Awaking {
 	
 	private PApplet app;
 	private PShape wake;
+	public PVector pos,vel;
 	private float x,y;
-	private float vel,a;
+	private float a,esc;
 //	private ArrayList<Elemento> contenido;
 	
 	public Awaking(PApplet app,PShape wake) {
@@ -17,13 +19,44 @@ public class Awaking {
 		this.wake=wake;
 		x=app.width/2;
 		y=app.height/2;
-		vel=(float)0.2;
-		a=(float)0.1;
+		vel = new PVector(0,0);
+		pos = new PVector(x,y);
+		esc=150;
+		a=(float)0.2;
 	}
 	
 	public void pintar(){
 		app.shapeMode(PApplet.CENTER);
-		app.shape(wake,x,y);
+		app.shape(wake,pos.x,pos.y,esc,esc);
+	}
+	
+	public boolean comer(Elemento elem){
+		if(PApplet.dist(pos.x, pos.y, elem.getX(), elem.getY())<50){
+			switch(elem.getNumero()){
+			case 0:
+				break;
+			case 1:
+				break;
+			case 2:
+				esc+=10;
+				break;
+			case 3:
+				
+				break;
+			case 4:
+				break;
+			}
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
+	public void update(){
+		PVector mouse = new PVector(app.mouseX-app.width/2,app.mouseY-app.height/2);
+		mouse.setMag(2);
+		vel.lerp(mouse, a);
+		pos.add(vel);
 	}
 
 	public float getX() {
@@ -40,14 +73,6 @@ public class Awaking {
 
 	public void setY(float y) {
 		this.y = y;
-	}
-
-	public float getVel() {
-		return vel;
-	}
-
-	public void setVel(float vel) {
-		this.vel = vel;
 	}
 	
 	

@@ -15,6 +15,8 @@ public class Elemento {
 		this.app=app;
 		this.forma=forma;
 		this.numero=numero;
+		x=app.random(-500,1500);
+		y= app.random(-500,1200);
 	}
 	
 	public void pintar(){

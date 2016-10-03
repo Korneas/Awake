@@ -20,6 +20,10 @@ public class Logica {
 
 	public Logica(PApplet app) {
 		this.app = app;
+		particle = new PShape[5];
+		enemies = new ArrayList<Enemigo>();
+		consumibles = new ArrayList<Elemento>();
+		cargarImg();
 		pantalla = 0;
 		botonPon = 255;
 		botonPos = 0;
@@ -27,7 +31,20 @@ public class Logica {
 		insBos = 0;
 		botonAon = 255;
 		botonAos = 0;
-		cargarImg();
+		
+		wake = new Awaking(app,awaking);
+		posXf = 0;
+		posYf = 0;
+		
+		for (int i = 0; i < 15; i++) {
+			int rad = (int)app.random(0,5);
+			enemies.add(new Enemigo(app,enemy,particle[rad],rad));
+		}
+		
+		for (int i = 0; i < 30; i++) {
+			int rad = (int)app.random(0,5);
+			consumibles.add(new Elemento(app,particle[rad],rad));
+		}
 	}
 
 	public void cargarImg() {
@@ -41,15 +58,23 @@ public class Logica {
 		botonAs = app.loadImage("botonAs.png");
 		instruc = app.loadImage("InstruccionesP.png");
 		tools = app.loadImage("tools.png");
+		
+		for (int i = 0; i < 5; i++) {
+			particle[i] = app.loadShape("Particulas-"+i+".svg");
+		}
+		
+		awaking = app.loadShape("Principal/Principal.svg");
+		enemy = app.loadShape("Enemigo.svg");	
+		
 	}
 
 	public void ejecutar() {
 		app.imageMode(PApplet.CENTER);
 		app.pushMatrix();
 		app.tint(255, 255);
-		angle+=0.2;
-		app.translate(app.width / 2, app.height / 2);
-		app.rotate(PApplet.radians(angle));
+//		angle+=0.2;
+		app.translate(app.width/2-wake.pos.x, app.height/2-wake.pos.y);
+//		app.rotate(PApplet.radians(angle));
 		app.image(fondo, 0,0);
 		app.popMatrix();
 		switch (pantalla) {
@@ -127,12 +152,18 @@ public class Logica {
 
 	public void game() {
 		
-		app.tint(255,255);
+		app.tint(255,255);		
+		app.pushMatrix();
+		app.translate(app.width/2-wake.pos.x, app.height/2-wake.pos.y);
+		wake.pintar();
+		wake.update();
+		for (int i = 0; i < enemies.size(); i++) {
+			enemies.get(i).pintar(posXf,posYf);
+			enemies.get(i).perseguir(wake.getX(), wake.getY());
+		}
+		app.popMatrix();
 		app.image(tools, app.width/2, app.height/2);
-	}
-
-	public void mover() {
-
+		
 	}
 
 	public void click() {
@@ -155,7 +186,11 @@ public class Logica {
 	}
 
 	public void tecla() {
-
+		switch(app.key){
+		case ' ':
+			//Organiza r colecciones
+			break;
+		}
 	}
 
 	public boolean zonaMouse(int x, int y, int x2, int y2) {
