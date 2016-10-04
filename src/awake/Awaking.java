@@ -38,7 +38,7 @@ public class Awaking {
 	}
 
 	public boolean comer(Elemento elem) {
-		if (PApplet.dist(pos.x, pos.y, elem.getX(), elem.getY()) < esc/2) {
+		if (PVector.dist(pos, elem.pos)< esc/2) {
 			switch (elem.getNumero()) {
 			case 0:
 				r+=20;
@@ -49,10 +49,10 @@ public class Awaking {
 				esc += 10;
 				break;
 			case 3:
-				a += 0.25;
+				a += 0.10;
 				break;
 			case 4:
-				atrac+=0.2;
+				atrac+=0.1;
 				break;
 			}
 			return true;

@@ -38,12 +38,12 @@ public class Logica {
 		posXf = 0;
 		posYf = 0;
 		
-		for (int i = 0; i < 15; i++) {
+		for (int i = 0; i < 20; i++) {
 			int rad = (int)app.random(0,5);
 			enemies.add(new Enemigo(app,enemy,particle[rad],rad));
 		}
 		
-		for (int i = 0; i < 60; i++) {
+		for (int i = 0; i < 80; i++) {
 			int rad = (int)app.random(0,5);
 			consumibles.add(new Elemento(app,particle[rad],elem[rad],rad));
 		}
@@ -168,6 +168,7 @@ public class Logica {
 		
 		for (int i = 0; i < consumibles.size(); i++) {
 			consumibles.get(i).girar(posXf,posYf);
+			consumibles.get(i).perseguir(wake.pos, wake.getAtrac());
 			
 			float cX = consumibles.get(i).getX();
 			float cY = consumibles.get(i).getY();
@@ -183,10 +184,16 @@ public class Logica {
 		
 		for (int i = 0; i < recoger.size(); i++) {
 			
-			if(i<11){
+			if(i<12){
 			recoger.get(i).setxP(240+(i*20));
-			}
 			recoger.get(i).setyP(60);
+			}
+			
+			if(i>=12 && i<24){
+				recoger.get(i).setxP(240+((i-12)*20));
+				recoger.get(i).setyP(90);
+			}
+			
 			recoger.get(i).pintarEsf();
 		}
 		
