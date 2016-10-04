@@ -6,56 +6,64 @@ import processing.core.PShape;
 import processing.core.PVector;
 
 public class Awaking {
-	
+
 	private PApplet app;
 	private PShape wake;
-	public PVector pos,vel;
-	private float x,y;
-	private float a,esc;
-//	private ArrayList<Elemento> contenido;
-	
-	public Awaking(PApplet app,PShape wake) {
-		this.app=app;
-		this.wake=wake;
-		x=app.width/2;
-		y=app.height/2;
-		vel = new PVector(0,0);
-		pos = new PVector(x,y);
-		esc=150;
-		a=(float)0.2;
+	public PVector pos, vel;
+	private float x, y;
+	private float a, esc,r,atrac;
+	// private ArrayList<Elemento> contenido;
+
+	public Awaking(PApplet app, PShape wake) {
+		this.app = app;
+		this.wake = wake;
+		x = app.width / 2;
+		y = app.height / 2;
+		vel = new PVector(0, 0);
+		pos = new PVector(x, y);
+		esc = 80;
+		a = 2;
 	}
-	
-	public void pintar(){
+
+	public void pintar() {
 		app.shapeMode(PApplet.CENTER);
-		app.shape(wake,pos.x,pos.y,esc,esc);
+		// app.shape(wake,pos.x,pos.y,esc,esc);
+		for (int i = 0; i < 25; i++) {
+			app.noFill();
+			app.stroke(r, 200, 0,255 - (i * 10));
+			app.strokeWeight((float) 1.5);
+			app.ellipse(pos.x, pos.y, esc - (i * (float) 1.5), esc - (i * (float) 1.5));
+		}
+		app.tint(255, 255);
 	}
-	
-	public boolean comer(Elemento elem){
-		if(PApplet.dist(pos.x, pos.y, elem.getX(), elem.getY())<50){
-			switch(elem.getNumero()){
+
+	public boolean comer(Elemento elem) {
+		if (PApplet.dist(pos.x, pos.y, elem.getX(), elem.getY()) < esc/2) {
+			switch (elem.getNumero()) {
 			case 0:
+				r+=20;
 				break;
 			case 1:
 				break;
 			case 2:
-				esc+=10;
+				esc += 10;
 				break;
 			case 3:
-				a+=0.2;
+				a += 0.25;
 				break;
 			case 4:
+				atrac+=0.2;
 				break;
 			}
 			return true;
-		} else {
-			return false;
 		}
+		return false;
 	}
-	
-	public void update(){
-		PVector mouse = new PVector(app.mouseX-app.width/2,app.mouseY-app.height/2);
-		mouse.setMag(2);
-		vel.lerp(mouse, a);
+
+	public void update() {
+		PVector mouse = new PVector(app.mouseX - app.width / 2, app.mouseY - app.height / 2);
+		mouse.setMag(a);
+		vel.lerp(mouse, (float) 0.2);
 		pos.add(vel);
 	}
 
@@ -82,6 +90,15 @@ public class Awaking {
 	public void setEsc(float esc) {
 		this.esc = esc;
 	}
+
+	public float getAtrac() {
+		return atrac;
+	}
+
+	public void setAtrac(float atrac) {
+		this.atrac = atrac;
+	}
 	
 	
+
 }

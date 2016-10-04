@@ -6,17 +6,19 @@ import processing.core.PShape;
 public class Elemento {
 	
 	private PApplet app;
-	private PShape forma;
-	private float x,y;
+	private PShape forma,part;
+	private float x,y,xP,yP;
 	private float angle;
 	private int numero;
 	
-	public Elemento(PApplet app,PShape forma,int numero) {
+	public Elemento(PApplet app,PShape forma,PShape part,int numero) {
 		this.app=app;
 		this.forma=forma;
 		this.numero=numero;
-		x=app.random(-500,1500);
-		y= app.random(-500,1200);
+		this.part=part;
+		angle = app.random(360);
+		x=app.random(-app.width,app.width*2);
+		y= app.random(-app.height,app.height*2);
 	}
 	
 	public void pintar(){
@@ -24,12 +26,15 @@ public class Elemento {
 		app.shape(forma,0,0);
 	}
 	
-	public void girar(float x,float y){
-		this.x=x;
-		this.y=y;
+	public void pintarEsf(){
+		app.shapeMode(PApplet.CENTER);
+		app.shape(part,xP,yP);
+	}
+	
+	public void girar(float posx,float posy){
 		app.pushMatrix();
-		angle+=0.02;
-		app.translate(x,y);
+		app.translate(x-posx,y-posy);
+		angle+=2;
 		app.rotate(PApplet.radians(angle));
 		pintar();
 		app.popMatrix();
@@ -58,6 +63,24 @@ public class Elemento {
 	public void setNumero(int numero) {
 		this.numero = numero;
 	}
+
+	public float getxP() {
+		return xP;
+	}
+
+	public void setxP(float xP) {
+		this.xP = xP;
+	}
+
+	public float getyP() {
+		return yP;
+	}
+
+	public void setyP(float yP) {
+		this.yP = yP;
+	}
+	
+	
 	
 	
 }

@@ -21,8 +21,10 @@ public class Logica {
 	public Logica(PApplet app) {
 		this.app = app;
 		particle = new PShape[5];
+		elem = new PShape[5];
 		enemies = new ArrayList<Enemigo>();
 		consumibles = new ArrayList<Elemento>();
+		recoger = new ArrayList<Elemento>();
 		cargarImg();
 		pantalla = 0;
 		botonPon = 255;
@@ -41,9 +43,9 @@ public class Logica {
 			enemies.add(new Enemigo(app,enemy,particle[rad],rad));
 		}
 		
-		for (int i = 0; i < 30; i++) {
+		for (int i = 0; i < 60; i++) {
 			int rad = (int)app.random(0,5);
-			consumibles.add(new Elemento(app,particle[rad],rad));
+			consumibles.add(new Elemento(app,particle[rad],elem[rad],rad));
 		}
 	}
 
@@ -61,6 +63,7 @@ public class Logica {
 		
 		for (int i = 0; i < 5; i++) {
 			particle[i] = app.loadShape("Particulas-"+i+".svg");
+			elem[i] = app.loadShape("ParticulasPeq-"+i+".svg");
 		}
 		
 		awaking = app.loadShape("Principal/Principal.svg");
@@ -73,7 +76,8 @@ public class Logica {
 		app.pushMatrix();
 		app.tint(255, 255);
 //		angle+=0.2;
-		app.translate(app.width/2-wake.pos.x, app.height/2-wake.pos.y);
+		app.translate(app.width/2, app.width/2);
+//		app.translate(app.width/2-wake.pos.x, app.width/2-wake.pos.y);
 //		app.rotate(PApplet.radians(angle));
 		app.image(fondo, 0,0);
 		app.popMatrix();
@@ -159,7 +163,7 @@ public class Logica {
 		wake.update();
 		for (int i = 0; i < enemies.size(); i++) {
 			enemies.get(i).pintar(posXf,posYf);
-			enemies.get(i).perseguir(wake.getX(), wake.getY());
+			enemies.get(i).perseguir(wake.pos,1);
 		}
 		
 		for (int i = 0; i < consumibles.size(); i++) {
@@ -167,7 +171,7 @@ public class Logica {
 			
 			float cX = consumibles.get(i).getX();
 			float cY = consumibles.get(i).getY();
-			if(PApplet.dist(wake.pos.x, wake.pos.y, cX, cY)<wake.getEsc()/2){
+			if(wake.comer(consumibles.get(i))){
 				Elemento elem = consumibles.get(i);
 				wake.comer(elem);
 				recoger.add(elem);
@@ -176,6 +180,15 @@ public class Logica {
 		}
 		app.popMatrix();
 		app.image(tools, app.width/2, app.height/2);
+		
+		for (int i = 0; i < recoger.size(); i++) {
+			
+			if(i<11){
+			recoger.get(i).setxP(240+(i*20));
+			}
+			recoger.get(i).setyP(60);
+			recoger.get(i).pintarEsf();
+		}
 		
 	}
 
