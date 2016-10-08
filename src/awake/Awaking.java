@@ -8,17 +8,22 @@ import processing.core.PVector;
 public class Awaking {
 
 	private PApplet app;
-	private PShape wake;
 	public PVector pos, vel;
+	private PShape brillos;
+	private int tam;
 	private float x, y;
-	private float a, esc,r,atrac;
+	private float a, esc, atrac;
+	private float xS, yS, rad, r;
+	private float xoff, yoff, offset;
 	// private ArrayList<Elemento> contenido;
 
-	public Awaking(PApplet app, PShape wake) {
+	public Awaking(PApplet app, PShape brillos) {
 		this.app = app;
-		this.wake = wake;
+		this.brillos = brillos;
 		x = app.width / 2;
 		y = app.height / 2;
+		r = 120;
+		tam = 25;
 		vel = new PVector(0, 0);
 		pos = new PVector(x, y);
 		esc = 80;
@@ -26,33 +31,53 @@ public class Awaking {
 	}
 
 	public void pintar() {
-		app.shapeMode(PApplet.CENTER);
-		// app.shape(wake,pos.x,pos.y,esc,esc);
-		for (int i = 0; i < 25; i++) {
-			app.noFill();
-			app.stroke(r, 200, 0,255 - (i * 10));
-			app.strokeWeight((float) 1.5);
-			app.ellipse(pos.x, pos.y, esc - (i * (float) 1.5), esc - (i * (float) 1.5));
-		}
+		// app.translate(pos.x, pos.y);
+
+		// app.noFill();
+		// app.stroke(255);
+		// xoff=0;
+		// app.beginShape();
+		// for (int i = 0; i < PApplet.TWO_PI; i+=0.1) {
+		//
+		// offset = PApplet.map(app.noise(xoff, yoff), 0, 1, -25, 25);
+		//
+		// r = rad + offset;
+		//
+		// xS = PApplet.cos(i) * r;
+		// yS = PApplet.sin(i) * r;
+		// app.vertex(xS, yS);
+		//
+		// xoff+=0.2;
+		// }
+		// app.endShape(PApplet.CLOSE);
+		// yoff+=0.1;
+			for (int i = 0; i < tam; i++) {
+				app.noFill();
+				app.stroke(r, 80, 80, 255 - (i * 7));
+				app.strokeWeight((float) 1.5);
+				app.ellipse(pos.x, pos.y, esc - (i * (float) 1.5), esc - (i * (float) 1.5));
+			}
+		app.shape(brillos, pos.x, pos.y, esc * (float) 1.2, esc * (float) 1.2);
 		app.tint(255, 255);
 	}
 
 	public boolean comer(Elemento elem) {
-		if (PVector.dist(pos, elem.pos)< esc/2) {
+		if (PVector.dist(pos, elem.pos) < esc / 2) {
 			switch (elem.getNumero()) {
 			case 0:
-				r+=20;
+				r += 10;
 				break;
 			case 1:
 				break;
 			case 2:
-				esc += 10;
+				esc += 5;
+				tam += 10;
 				break;
 			case 3:
 				a += 0.10;
 				break;
 			case 4:
-				atrac+=0.1;
+				atrac += 0.1;
 				break;
 			}
 			return true;
@@ -98,7 +123,5 @@ public class Awaking {
 	public void setAtrac(float atrac) {
 		this.atrac = atrac;
 	}
-	
-	
 
 }

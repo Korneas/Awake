@@ -33,7 +33,7 @@ public class Enemigo {
 		if (PVector.dist(elem, pos) < 500) {
 			PVector dir = PVector.sub(elem, pos);
 			dir.normalize();
-			dir.mult(mult / 2);
+			dir.mult(mult / 15);
 			pos.add(dir);
 		}
 	}
@@ -62,4 +62,13 @@ public class Enemigo {
 		this.vel = vel;
 	}
 
+	public int getNumero() {
+		return numero;
+	}
+
+	public void setNumero(int numero) {
+		this.numero = numero;
+	}
+
+	
 }

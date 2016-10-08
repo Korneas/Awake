@@ -1,27 +1,29 @@
 package awake;
 
 import java.util.ArrayList;
+import java.util.ListIterator;
 
 import processing.core.*;
 
 public class Logica {
 
 	private PApplet app;
-	private float posXf, posYf,angle;
+	private float posXf, posYf, angle;
 	private int pantalla, botonPon, botonPos, insBos, insBon, botonAos, botonAon;
+	private int[] num;
 	private PImage fondo, tools;
 	private PImage inicio, botonPs, botonPn, insBs, insBn, instruc, botonAs, botonAn;
-	private PShape awaking,enemy;
-	private PShape[] particle,elem;
+	private PShape enemy, brillo;
+	private PShape[] particle, elem;
 	private Awaking wake;
 	private ArrayList<Enemigo> enemies;
-	private ArrayList<Elemento> consumibles,recoger;
-	
+	private ArrayList<Elemento> consumibles, recoger;
 
 	public Logica(PApplet app) {
 		this.app = app;
 		particle = new PShape[5];
 		elem = new PShape[5];
+		num = new int[5];
 		enemies = new ArrayList<Enemigo>();
 		consumibles = new ArrayList<Elemento>();
 		recoger = new ArrayList<Elemento>();
@@ -33,19 +35,19 @@ public class Logica {
 		insBos = 0;
 		botonAon = 255;
 		botonAos = 0;
-		
-		wake = new Awaking(app,awaking);
+
+		wake = new Awaking(app, brillo);
 		posXf = 0;
 		posYf = 0;
-		
+
 		for (int i = 0; i < 20; i++) {
-			int rad = (int)app.random(0,5);
-			enemies.add(new Enemigo(app,enemy,particle[rad],rad));
+			int rad = (int) app.random(0, 5);
+			enemies.add(new Enemigo(app, enemy, particle[rad], rad));
 		}
-		
+
 		for (int i = 0; i < 80; i++) {
-			int rad = (int)app.random(0,5);
-			consumibles.add(new Elemento(app,particle[rad],elem[rad],rad));
+			int rad = (int) app.random(0, 5);
+			consumibles.add(new Elemento(app, particle[rad], elem[rad], rad));
 		}
 	}
 
@@ -60,26 +62,25 @@ public class Logica {
 		botonAs = app.loadImage("botonAs.png");
 		instruc = app.loadImage("InstruccionesP.png");
 		tools = app.loadImage("tools.png");
-		
+
 		for (int i = 0; i < 5; i++) {
-			particle[i] = app.loadShape("Particulas-"+i+".svg");
-			elem[i] = app.loadShape("ParticulasPeq-"+i+".svg");
+			particle[i] = app.loadShape("Particulas-" + i + ".svg");
+			elem[i] = app.loadShape("ParticulasPeq-" + i + ".svg");
 		}
-		
-		awaking = app.loadShape("Principal/Principal.svg");
-		enemy = app.loadShape("Enemigo.svg");	
-		
+
+		enemy = app.loadShape("Enemigo.svg");
+		brillo = app.loadShape("PrincipalBrillos.svg");
 	}
 
 	public void ejecutar() {
 		app.imageMode(PApplet.CENTER);
 		app.pushMatrix();
 		app.tint(255, 255);
-//		angle+=0.2;
-		app.translate(app.width/2, app.width/2);
-//		app.translate(app.width/2-wake.pos.x, app.width/2-wake.pos.y);
-//		app.rotate(PApplet.radians(angle));
-		app.image(fondo, 0,0);
+		// angle+=0.2;
+		app.translate(app.width / 2, app.width / 2);
+		// app.translate(app.width/2-wake.pos.x, app.width/2-wake.pos.y);
+		// app.rotate(PApplet.radians(angle));
+		app.image(fondo, 0, 0);
 		app.popMatrix();
 		switch (pantalla) {
 		case 0: // INICIO
@@ -155,63 +156,72 @@ public class Logica {
 	}
 
 	public void game() {
-		
-		app.tint(255,255);		
+
+		app.tint(255, 255);
 		app.pushMatrix();
-		app.translate(app.width/2-wake.pos.x, app.height/2-wake.pos.y);
+		app.translate(app.width / 2 - wake.pos.x, app.height / 2 - wake.pos.y);
 		wake.pintar();
 		wake.update();
 		for (int i = 0; i < enemies.size(); i++) {
-			enemies.get(i).pintar(posXf,posYf);
-			enemies.get(i).perseguir(wake.pos,1);
+			enemies.get(i).pintar(posXf, posYf);
+			for (int j = 0; j < 5; j++) {
+				if (enemies.get(i).getNumero() == j) {
+					enemies.get(i).perseguir(wake.pos, num[j]);
+				}
+			}
 		}
-		
+
 		for (int i = 0; i < consumibles.size(); i++) {
-			consumibles.get(i).girar(posXf,posYf);
+			consumibles.get(i).girar(posXf, posYf);
 			consumibles.get(i).perseguir(wake.pos, wake.getAtrac());
-			
+
 			float cX = consumibles.get(i).getX();
 			float cY = consumibles.get(i).getY();
-			if(wake.comer(consumibles.get(i))){
+			if (wake.comer(consumibles.get(i))) {
 				Elemento elem = consumibles.get(i);
 				wake.comer(elem);
+				for (int j = 0; j < 5; j++) {
+					if (elem.getNumero() == j) {
+						num[j]++;
+					}
+				}
 				recoger.add(elem);
 				consumibles.remove(elem);
 			}
 		}
 		app.popMatrix();
-		app.image(tools, app.width/2, app.height/2);
-		
+		app.image(tools, app.width / 2, app.height / 2);
+
 		for (int i = 0; i < recoger.size(); i++) {
-			
-			if(i<12){
-			recoger.get(i).setxP(240+(i*20));
-			recoger.get(i).setyP(60);
+
+			if (i < 12) {
+				recoger.get(i).setxP(240 + (i * 20));
+				recoger.get(i).setyP(60);
 			}
-			
-			if(i>=12 && i<24){
-				recoger.get(i).setxP(240+((i-12)*20));
+
+			if (i >= 12 && i < 24) {
+				recoger.get(i).setxP(240 + ((i - 12) * 20));
 				recoger.get(i).setyP(90);
 			}
-			
+
 			recoger.get(i).pintarEsf();
 		}
-		
+
 	}
 
 	public void click() {
 
-		if (zonaMouse(342, 605, 657, 659) && pantalla==0) {
+		if (zonaMouse(342, 605, 657, 659) && pantalla == 0) {
 			pantalla = 1;
 			insBon = 255;
 			insBos = 0;
 		}
 
-		if (zonaMouse(428, 433, 573, 578) && pantalla==0) {
+		if (zonaMouse(428, 433, 573, 578) && pantalla == 0) {
 			pantalla = 2;
 		}
 
-		if (zonaMouse(59, 31, 131, 103) && pantalla==1) {
+		if (zonaMouse(59, 31, 131, 103) && pantalla == 1) {
 			pantalla = 0;
 			botonAon = 255;
 			botonAos = 0;
@@ -219,9 +229,11 @@ public class Logica {
 	}
 
 	public void tecla() {
-		switch(app.key){
+		switch (app.key) {
 		case ' ':
-			//Organiza r colecciones
+			// Cambia los valores del array por los hashset dados
+
+			// Organiza r colecciones
 			break;
 		}
 	}

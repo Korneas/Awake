@@ -44,7 +44,7 @@ public class Elemento {
 	}
 
 	public void perseguir(PVector elem, float atrac) {
-		if (PVector.dist(elem, pos) < 500) {
+		if (PVector.dist(elem, pos) < 150+(atrac*100)) {
 			PVector dir = PVector.sub(elem, pos);
 			dir.normalize();
 			dir.mult(atrac / 2);
