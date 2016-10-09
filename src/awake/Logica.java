@@ -1,6 +1,7 @@
 package awake;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.ListIterator;
 
 import processing.core.*;
@@ -16,17 +17,28 @@ public class Logica {
 	private PShape enemy, brillo;
 	private PShape[] particle, elem;
 	private Awaking wake;
+
 	private ArrayList<Enemigo> enemies;
 	private ArrayList<Elemento> consumibles, recoger;
+	private ArrayList<Elemento> exe, rom, tri, lin, cru;
 
 	public Logica(PApplet app) {
 		this.app = app;
+
 		particle = new PShape[5];
 		elem = new PShape[5];
 		num = new int[5];
+
 		enemies = new ArrayList<Enemigo>();
 		consumibles = new ArrayList<Elemento>();
 		recoger = new ArrayList<Elemento>();
+
+		exe = new ArrayList<Elemento>();
+		rom = new ArrayList<Elemento>();
+		tri = new ArrayList<Elemento>();
+		lin = new ArrayList<Elemento>();
+		cru = new ArrayList<Elemento>();
+
 		cargarImg();
 		pantalla = 0;
 		botonPon = 255;
@@ -166,27 +178,29 @@ public class Logica {
 			enemies.get(i).pintar(posXf, posYf);
 			for (int j = 0; j < 5; j++) {
 				if (enemies.get(i).getNumero() == j) {
-					enemies.get(i).perseguir(wake.pos, num[j]);
+					enemies.get(i).seguir(wake.pos, num[j]);
 				}
 			}
 		}
 
 		for (int i = 0; i < consumibles.size(); i++) {
 			consumibles.get(i).girar(posXf, posYf);
-			consumibles.get(i).perseguir(wake.pos, wake.getAtrac());
+			consumibles.get(i).seguir(wake.pos, wake.getAtrac());
 
 			float cX = consumibles.get(i).getX();
 			float cY = consumibles.get(i).getY();
-			if (wake.comer(consumibles.get(i))) {
-				Elemento elem = consumibles.get(i);
-				wake.comer(elem);
-				for (int j = 0; j < 5; j++) {
-					if (elem.getNumero() == j) {
-						num[j]++;
+			if (recoger.size() < 36) {
+				if (wake.comer(consumibles.get(i))) {
+					Elemento elem = consumibles.get(i);
+					wake.comer(elem);
+					for (int j = 0; j < 5; j++) {
+						if (elem.getNumero() == j) {
+							num[j]++;
+						}
 					}
+					recoger.add(elem);
+					consumibles.remove(elem);
 				}
-				recoger.add(elem);
-				consumibles.remove(elem);
 			}
 		}
 		app.popMatrix();
@@ -201,7 +215,11 @@ public class Logica {
 
 			if (i >= 12 && i < 24) {
 				recoger.get(i).setxP(240 + ((i - 12) * 20));
-				recoger.get(i).setyP(90);
+				recoger.get(i).setyP(80);
+			}
+			if (i >= 24 && i < 36) {
+				recoger.get(i).setxP(240 + ((i - 24) * 20));
+				recoger.get(i).setyP(100);
 			}
 
 			recoger.get(i).pintarEsf();
@@ -231,9 +249,67 @@ public class Logica {
 	public void tecla() {
 		switch (app.key) {
 		case ' ':
-			// Cambia los valores del array por los hashset dados
+			recoger.sort(new ComparadorOrden());
+			break;
+		case PApplet.TAB:
+			for (int i = 0; i < recoger.size(); i++) {
+				Elemento elem = recoger.get(i);
 
-			// Organiza r colecciones
+				if (elem.getNumero() == 0) {
+					exe.add(elem);
+					recoger.remove(elem);
+				}
+
+				if (elem.getNumero() == 1) {
+					rom.add(elem);
+					recoger.remove(elem);
+				}
+
+				if (elem.getNumero() == 2) {
+					tri.add(elem);
+					recoger.remove(elem);
+				}
+
+				if (elem.getNumero() == 3) {
+					lin.add(elem);
+					recoger.remove(elem);
+				}
+
+				if (elem.getNumero() == 4) {
+					cru.add(elem);
+					recoger.remove(elem);
+				}
+			}
+			break;
+		case '1':
+			if (!exe.isEmpty()) {
+				consumibles.addAll(exe);
+				exe.clear();
+			}
+			break;
+		case '2':
+			if (!rom.isEmpty()) {
+				consumibles.addAll(rom);
+				rom.clear();
+			}
+			break;
+		case '3':
+			if (!tri.isEmpty()) {
+				consumibles.addAll(tri);
+				tri.clear();
+			}
+			break;
+		case '4':
+			if (!lin.isEmpty()) {
+				consumibles.addAll(lin);
+				lin.clear();
+			}
+			break;
+		case '5':
+			if (!cru.isEmpty()) {
+				consumibles.addAll(cru);
+				cru.clear();
+			}
 			break;
 		}
 	}

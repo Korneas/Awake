@@ -4,7 +4,7 @@ import processing.core.PApplet;
 import processing.core.PShape;
 import processing.core.PVector;
 
-public class Enemigo {
+public class Enemigo implements Perseguir {
 
 	private PApplet app;
 	private PShape estilo, tipo;
@@ -29,11 +29,12 @@ public class Enemigo {
 		app.shape(estilo, pos.x - posx, pos.y - posy, 120, 120);
 	}
 
-	public void perseguir(PVector elem, float mult) {
+	@Override
+	public void seguir(PVector elem, float mult) {
 		if (PVector.dist(elem, pos) < 500) {
 			PVector dir = PVector.sub(elem, pos);
 			dir.normalize();
-			dir.mult(mult / 15);
+			dir.mult(mult / 8);
 			pos.add(dir);
 		}
 	}
@@ -70,5 +71,4 @@ public class Enemigo {
 		this.numero = numero;
 	}
 
-	
 }

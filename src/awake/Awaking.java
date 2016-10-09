@@ -12,9 +12,8 @@ public class Awaking {
 	private PShape brillos;
 	private int tam;
 	private float x, y;
-	private float a, esc, atrac;
-	private float xS, yS, rad, r;
-	private float xoff, yoff, offset;
+	private float a, esc,var, atrac;
+	private float r,f,resp;
 	// private ArrayList<Elemento> contenido;
 
 	public Awaking(PApplet app, PShape brillos) {
@@ -23,7 +22,8 @@ public class Awaking {
 		x = app.width / 2;
 		y = app.height / 2;
 		r = 120;
-		tam = 25;
+		resp=(float) 0.01;
+		tam = 40;
 		vel = new PVector(0, 0);
 		pos = new PVector(x, y);
 		esc = 80;
@@ -31,33 +31,15 @@ public class Awaking {
 	}
 
 	public void pintar() {
-		// app.translate(pos.x, pos.y);
-
-		// app.noFill();
-		// app.stroke(255);
-		// xoff=0;
-		// app.beginShape();
-		// for (int i = 0; i < PApplet.TWO_PI; i+=0.1) {
-		//
-		// offset = PApplet.map(app.noise(xoff, yoff), 0, 1, -25, 25);
-		//
-		// r = rad + offset;
-		//
-		// xS = PApplet.cos(i) * r;
-		// yS = PApplet.sin(i) * r;
-		// app.vertex(xS, yS);
-		//
-		// xoff+=0.2;
-		// }
-		// app.endShape(PApplet.CLOSE);
-		// yoff+=0.1;
+		f+=resp;
+		var=(PApplet.sin(f)*20);
 			for (int i = 0; i < tam; i++) {
 				app.noFill();
-				app.stroke(r, 80, 80, 255 - (i * 7));
-				app.strokeWeight((float) 1.5);
-				app.ellipse(pos.x, pos.y, esc - (i * (float) 1.5), esc - (i * (float) 1.5));
+				app.stroke(r+i, 80, 80, 255 - (i * 6));
+				app.strokeWeight(1);
+				app.ellipse(pos.x, pos.y, (esc+var) - (i), (esc+var) - (i));
 			}
-		app.shape(brillos, pos.x, pos.y, esc * (float) 1.2, esc * (float) 1.2);
+		app.shape(brillos, pos.x, pos.y, var + (esc * (float) 1.2), var + (esc * (float) 1.2));
 		app.tint(255, 255);
 	}
 
@@ -68,16 +50,16 @@ public class Awaking {
 				r += 10;
 				break;
 			case 1:
+				resp+=0.002;
 				break;
 			case 2:
-				esc += 5;
-				tam += 10;
+				esc += 4;
 				break;
 			case 3:
-				a += 0.10;
+				a += 0.05;
 				break;
 			case 4:
-				atrac += 0.1;
+				atrac += 0.05;
 				break;
 			}
 			return true;

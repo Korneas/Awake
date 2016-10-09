@@ -4,7 +4,7 @@ import processing.core.PApplet;
 import processing.core.PShape;
 import processing.core.PVector;
 
-public class Elemento {
+public class Elemento implements Perseguir {
 
 	private PApplet app;
 	private PShape forma, part;
@@ -43,8 +43,9 @@ public class Elemento {
 		app.popMatrix();
 	}
 
-	public void perseguir(PVector elem, float atrac) {
-		if (PVector.dist(elem, pos) < 150+(atrac*100)) {
+	@Override
+	public void seguir(PVector elem, float atrac) {
+		if (PVector.dist(elem, pos) < 150 + (atrac * 100)) {
 			PVector dir = PVector.sub(elem, pos);
 			dir.normalize();
 			dir.mult(atrac / 2);
