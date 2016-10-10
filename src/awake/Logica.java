@@ -334,7 +334,8 @@ public class Logica {
 			tri.clear();
 			lin.clear();
 			cru.clear();
-
+			
+			recoger.clear();
 			enemies.clear();
 			consumibles.clear();
 
