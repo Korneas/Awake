@@ -39,6 +39,13 @@ public class Enemigo implements Perseguir {
 		}
 	}
 
+	public boolean colision(PVector elem) {
+		if (PVector.dist(elem, pos) < 120) {
+			return true;
+		}
+		return false;
+	}
+
 	public float getX() {
 		return x;
 	}

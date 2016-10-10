@@ -12,8 +12,8 @@ public class Awaking {
 	private PShape brillos;
 	private int tam;
 	private float x, y;
-	private float a, esc,var, atrac;
-	private float r,f,resp;
+	private float a, esc, var, atrac;
+	private float r, f, resp;
 	// private ArrayList<Elemento> contenido;
 
 	public Awaking(PApplet app, PShape brillos) {
@@ -22,23 +22,24 @@ public class Awaking {
 		x = app.width / 2;
 		y = app.height / 2;
 		r = 120;
-		resp=(float) 0.01;
+		resp = (float) 0.01;
 		tam = 40;
 		vel = new PVector(0, 0);
 		pos = new PVector(x, y);
 		esc = 80;
 		a = 2;
+		atrac = 0;
 	}
 
 	public void pintar() {
-		f+=resp;
-		var=(PApplet.sin(f)*20);
-			for (int i = 0; i < tam; i++) {
-				app.noFill();
-				app.stroke(r+i, 80, 80, 255 - (i * 6));
-				app.strokeWeight(1);
-				app.ellipse(pos.x, pos.y, (esc+var) - (i), (esc+var) - (i));
-			}
+		f += resp;
+		var = (PApplet.sin(f) * 20);
+		for (int i = 0; i < tam; i++) {
+			app.noFill();
+			app.stroke(r + i, 80, 80, 255 - (i * 6));
+			app.strokeWeight(1);
+			app.ellipse(pos.x, pos.y, (esc + var) - (i), (esc + var) - (i));
+		}
 		app.shape(brillos, pos.x, pos.y, var + (esc * (float) 1.2), var + (esc * (float) 1.2));
 		app.tint(255, 255);
 	}
@@ -50,7 +51,7 @@ public class Awaking {
 				r += 10;
 				break;
 			case 1:
-				resp+=0.002;
+				resp += 0.002;
 				break;
 			case 2:
 				esc += 4;
@@ -74,22 +75,6 @@ public class Awaking {
 		pos.add(vel);
 	}
 
-	public float getX() {
-		return x;
-	}
-
-	public void setX(float x) {
-		this.x = x;
-	}
-
-	public float getY() {
-		return y;
-	}
-
-	public void setY(float y) {
-		this.y = y;
-	}
-
 	public float getEsc() {
 		return esc;
 	}
@@ -104,6 +89,30 @@ public class Awaking {
 
 	public void setAtrac(float atrac) {
 		this.atrac = atrac;
+	}
+
+	public float getA() {
+		return a;
+	}
+
+	public void setA(float a) {
+		this.a = a;
+	}
+
+	public float getR() {
+		return r;
+	}
+
+	public void setR(float r) {
+		this.r = r;
+	}
+
+	public float getResp() {
+		return resp;
+	}
+
+	public void setResp(float resp) {
+		this.resp = resp;
 	}
 
 }
